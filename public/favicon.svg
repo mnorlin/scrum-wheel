@@ -1,0 +1,19 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-1-circle-fill" viewBox="0 0 16 16">
+  <style
+    path {
+      fill: black;
+    }
+    @media (prefers-color-scheme: dark) {
+      path {
+        fill: white;
+      }
+    }
+  </style>
+  <path
+     fill-rule="evenodd"
+     d="M 8,3 C 3.0062271,3.0019239 1.1016038,9.5150755 5.3040402,12.20885 9.5064765,14.902625 14.629402,10.452415 12.546,5.914 L 13.454,5.497 C 15.953999,10.943443 9.8056713,16.283527 4.7629207,13.050212 -0.27982994,9.8168977 2.0071925,2.0010187 8,2 Z"
+  />
+  <path
+     d="m 8,4.466 v -3.932 0 L 10.865116,2.5 v 0 z"
+     />
+</svg>
