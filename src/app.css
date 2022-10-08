@@ -1,3 +1,7 @@
+:root {
+  --gray: #434343;
+  --radius: 0.25rem;
+}
 body {
   font-family: sans-serif;
   background-color: #f3f3f3;

@@ -2,7 +2,7 @@
   import distinctColors from "distinct-colors";
   import { createEventDispatcher } from "svelte";
   import { onMount } from "svelte";
-  import { scale } from "svelte/transition";
+  import Slice from "./Slice.svelte";
 
   export let size = 500;
   export let slices = [];
@@ -38,68 +38,51 @@
 
   function calculateSlice() {
     const sliceCount = slices.length;
-    const sliceArc = 360 / sliceCount;
-    const offset = 90;
+    const sliceArc = (2 * Math.PI) / sliceCount;
+    const offset = Math.PI / 2;
     const index = Math.floor((endRotation + offset) / sliceArc);
     return index % sliceCount;
   }
 
-  $: colors = slices.length < 2 ? ([{hex: () => "#434343"}]) : distinctColors({ count: slices.length});
+  $: colors =
+    slices.length < 2
+      ? [{ hex: () => "#434343" }]
+      : distinctColors({ count: slices.length });
   $: viewBox = `0 0 ${size} ${size}`;
 
   $: radius = (size - 2 * margin) / 2;
-  $: halfCircumference = Math.PI * radius;
-  $: pieSize = halfCircumference * (slices.length > 0 ? 1 / slices.length : 1);
-  $: dashArray = `0 ${halfCircumference - pieSize} ${pieSize}`;
-  $: rotationStep = 360 / slices.length;
+  $: basAngle = (2 * Math.PI) / slices.length;
 </script>
 
 <svg width={size} height={size} {viewBox}>
   <g
     style:transform-origin="center"
-    style:--rotation="{endRotation}deg"
+    style:--rotation="{endRotation}rad"
     style:animation-duration="{duration}ms"
-    style:transform="rotate({startRotation}deg)"
+    style:transform="rotate({startRotation}rad)"
     style:animation-name={animating ? "spin" : ""}
     style:animation-fill-mode="forwards"
     style:animation-timing-function="cubic-bezier(.2,0,0,1)"
   >
     {#if slices.length > 0}
       {#each slices as slice, idx (idx)}
-        <circle
-          transition:scale
-          data-title={slice}
-          r={radius / 2}
-          cx={radius + margin}
-          cy={radius + margin}
-          fill="transparent"
-          stroke={colors[idx].hex()}
-          stroke-width={radius}
-          stroke-dasharray={dashArray}
-          style:transform-origin="center"
-          style:transform="rotate(-{idx * rotationStep}deg)"
-        />
-      {/each}
-      {#each slices as slice, idx}
-        <text
-          style:font-size="calc(var(--height) * 0.04)"
-          style:font-weight="bold"
-          style:transform="rotate(-{rotationStep / 2 + idx * rotationStep}deg)"
-          style:transform-origin="50%"
-          stroke="rgba(0,0,0,0.3)"
-          fill="rgba(255,255,255,1)"
-          stroke-width="1px"
-          x={radius * 1.5 + margin}
-          y={radius + margin}
-          width={radius}
-          dominant-baseline="middle"
-          text-anchor="middle"
+        <Slice
+          center={radius + margin}
+          {radius}
+          color={colors[idx].hex()}
+          offsetAngle={idx * basAngle}
+          angle={(2 * Math.PI) / (slices.length > 0 ? slices.length : 1)}
         >
           {slice}
-        </text>
+        </Slice>
       {/each}
     {:else}
-      <circle r={radius} cx={radius + margin} cy={radius + margin} fill={colors[0].hex()} />
+      <circle
+        r={radius}
+        cx={radius + margin}
+        cy={radius + margin}
+        fill={colors[0].hex()}
+      />
     {/if}
   </g>
 
@@ -114,7 +97,7 @@
     fill="white"
     style:backdrop-filter="blur(5px)"
     style:filter="drop-shadow(0px 2px 3px rgba(0,0,0,0.5))"
-    stroke="black"
+    stroke="var(--gray)"
   />
 </svg>
 
