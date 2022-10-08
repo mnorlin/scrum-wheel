@@ -1,9 +1,11 @@
 :root {
   --gray: #434343;
+  --light-gray: #f3f3f3;
+  --orange: rgb(223, 119, 57);
   --radius: 0.25rem;
 }
 body {
   font-family: sans-serif;
-  background-color: #f3f3f3;
+  background-color: var(--light-gray);
   margin: 0;
 }

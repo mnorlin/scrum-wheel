@@ -91,7 +91,7 @@
     padding: 0.25rem 0.5rem;
     transition: border-color 200ms ease;
   }
-  button:hover {
+  button:not(:disabled):hover {
     border-color: rgba(255, 255, 255, 0.8);
   }
 
