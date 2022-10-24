@@ -15,6 +15,7 @@
   loadTimer();
 
   const dispatch = createEventDispatcher();
+  $: document.title = `${document.title.split(" | ")[0]} ${inactive ? "" : ` | ${minutes}:${seconds}`}`;
 
   $: if (run && !inactive) active = true;
   $: if (reset) {
@@ -24,6 +25,7 @@
   }
 
   $: if (`${minutes}:${seconds}` == "00:00" && run) {
+    run = false;
     if (!inactive) {
       dispatch("done");
     }
@@ -124,12 +126,14 @@
       {paused ? "Resume" : "Pause"}
     {/if}
   </button>
-  {#if !inactive && !active}
+  {#if !inactive}
     <button
+      style:padding="0.25rem"
       on:click={() => {
         minutes = "00";
         seconds = "00";
         inactive = true;
+        active = false;
         save();
       }}
       class="inactivate-button">×</button
