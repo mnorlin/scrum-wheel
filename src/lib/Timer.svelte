@@ -20,6 +20,7 @@
   $: if (run) active = true;
   $: if (reset) {
     active = false;
+    pause = false;
     loadTime();
   }
   $: if (minutes == "00" && seconds == "00" && run) {
