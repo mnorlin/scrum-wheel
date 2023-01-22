@@ -17,7 +17,7 @@
     "cz-conventional-changelog": "^3.3.0",
     "gh-pages": "^4.0.0",
     "husky": "^8.0.3",
-    "prettier": "^2.7.1",
+    "prettier": "^2.8.3",
     "prettier-plugin-svelte": "^2.7.1",
     "standard-version": "^9.5.0",
     "svelte": "^3.49.0",
