@@ -15,7 +15,9 @@
   loadTimer();
 
   const dispatch = createEventDispatcher();
-  $: document.title = `${document.title.split(" | ")[0]} ${inactive ? "" : ` | ${minutes}:${seconds}`}`;
+  $: document.title = `${document.title.split(" | ")[0]} ${
+    inactive ? "" : ` | ${minutes}:${seconds}`
+  }`;
 
   $: if (run && !inactive) active = true;
   $: if (reset) {
