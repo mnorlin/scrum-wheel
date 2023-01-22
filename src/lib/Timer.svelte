@@ -9,17 +9,14 @@
   let minutes;
   let seconds;
   let paused = false; // If the timer is paused
-  let disabled = "00:00" == `${getTimer().minutes}:${getTimer().seconds}`; // If the timer is disabled (set to 00:00)
+  let inactive = "00:00" == `${getTimer().minutes}:${getTimer().seconds}`; // If the timer is disabled (set to 00:00)
   let active = false; // If the timer is active (running or paused)
 
   loadTimer();
 
   const dispatch = createEventDispatcher();
 
-  $: minutes = formatTime(minutes);
-  $: seconds = formatTime(seconds);
-
-  $: if (run && !disabled) active = true;
+  $: if (run && !inactive) active = true;
   $: if (reset) {
     active = false;
     paused = false;
@@ -27,7 +24,7 @@
   }
 
   $: if (`${minutes}:${seconds}` == "00:00" && run) {
-    if (!disabled) {
+    if (!inactive) {
       dispatch("done");
     }
   }
@@ -44,6 +41,11 @@
       };
     }
     return { minutes: "01", seconds: "00" };
+  }
+
+  function handleBlur() {
+    minutes = formatTime(minutes);
+    seconds = formatTime(seconds);
   }
   function loadTimer() {
     minutes = getTimer().minutes;
@@ -81,26 +83,26 @@
     localStorage.setItem("time", newTimer);
 
     if ("00:00" == newTimer) {
-      disabled = true;
+      inactive = true;
     } else {
-      disabled = false;
+      inactive = false;
     }
   }
 </script>
 
-<div>
-  <div style:width={active ? "70%" : "100%"}>
+<div class="wrapper" class:active>
+  <div class="inputs" class:inactive style:width={active ? "70%" : "100%"}>
     <input
-      class:active
+      on:blur={handleBlur}
       disabled={active && !paused}
       name="minutes"
       bind:value={minutes}
       on:input={save}
       type="text"
     />
-    <span class:active>:</span>
+    :
     <input
-      class:active
+      on:blur={handleBlur}
       disabled={active && !paused}
       name="seconds"
       bind:value={seconds}
@@ -122,23 +124,45 @@
       {paused ? "Resume" : "Pause"}
     {/if}
   </button>
+  {#if !inactive && !active}
+    <button
+      on:click={() => {
+        minutes = "00";
+        seconds = "00";
+        inactive = true;
+        save();
+      }}
+      class="inactivate-button">×</button
+    >
+  {/if}
 </div>
 
 <style>
-  div {
-    position: relative;
-    color: var(--orange);
+  .inactivate-button {
+    position: absolute;
+    top: 0.3rem;
+    right: 0.5rem;
+    color: white;
+  }
+
+  .wrapper {
     display: flex;
+    position: relative;
     background-color: var(--gray);
     border-radius: var(--radius);
-    font-weight: bold;
-    line-height: 2rem;
     font-size: 2rem;
+    line-height: 3rem;
+    color: white;
+  }
+  .inputs {
+    display: flex;
     transition: width 500ms ease;
   }
-  span {
-    margin-top: 0.7rem;
-    color: white;
+
+  @supports (-moz-appearance: none) {
+    .wrapper {
+      line-height: 3.39rem;
+    }
   }
   input {
     color: white;
@@ -148,7 +172,9 @@
     padding: 0.5rem 0.25rem;
     font-size: 2rem;
   }
-  .active {
+  .active,
+  .active button,
+  .active input {
     color: var(--orange);
   }
 
@@ -162,10 +188,12 @@
     outline: none;
   }
 
+  .inactive {
+    opacity: 0.4;
+  }
   button {
     overflow: hidden;
     cursor: pointer;
-    color: var(--orange);
     background: transparent;
     border: none;
     padding: 0;

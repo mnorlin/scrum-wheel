@@ -4,8 +4,9 @@
   --orange: rgb(223, 119, 57);
   --radius: 0.25rem;
 }
+
 body {
-  font-family: sans-serif;
+  font-family: Helvetica, sans-serif;
   background-color: var(--light-gray);
   margin: 0;
 }
