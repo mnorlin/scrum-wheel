@@ -46,7 +46,7 @@
 
   $: colors =
     slices.length < 2
-      ? [{ hex: () => "#434343" }]
+      ? [{ hex: () => "var(--gray)" }]
       : distinctColors({ count: slices.length });
   $: viewBox = `0 0 ${size} ${size}`;
 
@@ -64,6 +64,13 @@
     style:animation-fill-mode="forwards"
     style:animation-timing-function="cubic-bezier(.2,0,0,1)"
   >
+    <circle
+      style:filter="drop-shadow(0px 0px 2px rgba(0,0,0,0.5))"
+      r={radius}
+      cx={radius + margin}
+      cy={radius + margin}
+      fill={colors[0].hex()}
+    />
     {#if slices.length > 0}
       {#each slices as slice, idx (idx)}
         <Slice
@@ -76,13 +83,6 @@
           {slice}
         </Slice>
       {/each}
-    {:else}
-      <circle
-        r={radius}
-        cx={radius + margin}
-        cy={radius + margin}
-        fill={colors[0].hex()}
-      />
     {/if}
   </g>
 
@@ -94,10 +94,9 @@
       {size / 2 + size * 0.05},{margin - 5}
       {size / 2 + size * 0.05},{margin - margin * 0.9}
       "
-    fill="white"
+    fill="var(--light-gray)"
     style:backdrop-filter="blur(5px)"
-    style:filter="drop-shadow(0px 2px 3px rgba(0,0,0,0.5))"
-    stroke="var(--gray)"
+    style:filter="drop-shadow(0px 4px 2px rgba(0,0,0,0.5))"
   />
 </svg>
 

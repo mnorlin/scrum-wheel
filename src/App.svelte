@@ -11,6 +11,7 @@
   let wheelWidth = 500;
   let spinning = false;
   let activeTimer = false;
+  let alert = false;
 
   $: if (!$listStore.includes(current)) {
     current = null;
@@ -24,6 +25,7 @@
 
   function handleClick() {
     spinning = true;
+    alert = false;
     activeTimer = false;
     $listStore = $listStore.filter((item) => item != current);
     rotation += 2 * Math.PI * 4 + Math.random() * 2 * Math.PI;
@@ -31,6 +33,7 @@
 
   function handleFinishedTimer() {
     activeTimer = false;
+    alert = true;
   }
 </script>
 
@@ -60,7 +63,14 @@
     </div>
   </div>
   <div class="right">
-    <Timer on:done={handleFinishedTimer} run={activeTimer} reset={spinning} />
+    <div class:alert>
+      <Timer
+        on:stop={() => (alert = false)}
+        on:done={handleFinishedTimer}
+        run={activeTimer}
+        reset={spinning}
+      />
+    </div>
     <List />
   </div>
 </main>
@@ -127,5 +137,39 @@
     100% {
       transform: translate(-50%, -25%) rotate(360deg);
     }
+  }
+
+  @keyframes shake {
+    0% {
+      transform: scale(1);
+    }
+    14% {
+      transform: scale(1.1);
+    }
+    21% {
+      transform: scale(1.1) rotate(2deg);
+    }
+    28% {
+      transform: scale(1.1) rotate(-2deg);
+    }
+    35% {
+      transform: scale(1.1) rotate(2deg);
+    }
+    42% {
+      transform: scale(1.1) rotate(-2deg);
+    }
+    49% {
+      transform: scale(1.1) rotate(2deg);
+    }
+    56% {
+      transform: scale(1.1);
+    }
+    70% {
+      transform: scale(1);
+    }
+  }
+
+  .alert {
+    animation: shake 1.3s ease infinite;
   }
 </style>
